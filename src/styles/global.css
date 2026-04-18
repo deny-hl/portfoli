@@ -1,0 +1,232 @@
+:root {
+  --accent-h: 200;
+  --accent: oklch(0.74 0.09 var(--accent-h));
+  --accent-dim: oklch(0.74 0.09 var(--accent-h) / 0.18);
+  --accent-line: oklch(0.74 0.09 var(--accent-h) / 0.35);
+  --bg: #0B0D10;
+  --bg-elev: #101318;
+  --bg-hi: #14181E;
+  --fg: #EAEEF2;
+  --fg-dim: #A7B0BB;
+  --fg-mute: #6B7683;
+  --line: #1E242C;
+  --line-hi: #2A313B;
+  --density: 1;
+  --max-w: 1280px;
+  --gutter: 32px;
+  --label-col: 180px;
+  --label-gap: 32px;
+  --label-indent: calc(var(--label-col) + var(--label-gap));
+  color-scheme: dark;
+}
+
+html[data-theme='light'] {
+  --bg: #F7F8F9;
+  --bg-elev: #FFFFFF;
+  --bg-hi: #EEF0F2;
+  --fg: #0B0D10;
+  --fg-dim: #454C55;
+  --fg-mute: #7B838E;
+  --line: #E3E6EA;
+  --line-hi: #CFD4DA;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.55;
+  transition: background 0.25s ease, color 0.25s ease;
+  min-height: 100vh;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-feature-settings: 'zero', 'ss02';
+}
+
+::selection { background: var(--accent-dim); color: var(--fg); }
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Visually hidden but accessible to screen readers. Becomes visible on focus. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.sr-only:focus,
+.sr-only:focus-visible {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: auto;
+  height: auto;
+  padding: 10px 14px;
+  margin: 0;
+  clip: auto;
+  white-space: normal;
+  background: var(--bg-elev);
+  color: var(--fg);
+  border: 1px solid var(--accent-line);
+  border-radius: 6px;
+  z-index: 1000;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Subtle noise on dark bg for texture */
+.noise::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.015) 1px, transparent 0);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+}
+html[data-theme='light'] .noise::before { display: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--line-hi); }
+
+/* Responsive helpers — reused by components that can't easily inline-media-query */
+@media (max-width: 900px) {
+  :root {
+    --label-col: 0px;
+    --label-gap: 0px;
+    --label-indent: 0px;
+    --gutter: 24px;
+  }
+}
+@media (max-width: 640px) {
+  :root { --gutter: 20px; }
+}
+
+/* Layout primitives — inline styles can't do media queries, so shared grids live here */
+.container {
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+.hero-grid[data-layout='centered'] { grid-template-columns: 1fr; }
+
+.stats-ticker {
+  display: grid;
+  grid-template-columns: repeat(var(--stats-count, 4), 1fr);
+  overflow: hidden;
+}
+
+.skills-grid,
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.project-row-grid {
+  display: grid;
+  grid-template-columns: 64px 1.4fr 1.6fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 64px;
+}
+
+.nav-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.section-indent {
+  padding-left: var(--label-indent);
+}
+
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 12px; }
+  .project-row-grid {
+    grid-template-columns: 48px 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+  }
+  .project-row-grid > *:nth-child(3),
+  .project-row-grid > *:nth-child(4) {
+    grid-column: 2 / -1;
+  }
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .nav-wrap { gap: 12px; }
+}
+
+@media (max-width: 640px) {
+  .stats-ticker { grid-template-columns: repeat(2, 1fr); }
+  .nav-links { display: none; }
+}
